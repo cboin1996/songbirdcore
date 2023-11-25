@@ -1,0 +1,23 @@
+# ENV files
+*.env
+
+# Vscode
+.vscode
+
+# Python
+__pycache__
+requirements.txt.blank
+venv
+*.egg-info
+
+
+# Taskfile
+.task
+
+# Work directories
+app
+data
+
+# Secrets
+credentials.json
+token.json
