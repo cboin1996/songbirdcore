@@ -13,10 +13,12 @@ from .version import version
 
 logger = logging.getLogger(__name__)
 
+
 def load_version(toml_path: str):
-    with open(toml_path, 'rb') as f:
+    with open(toml_path, "rb") as f:
         data = tomllib.load(f)
     return data
+
 
 def set_logger_config_globally(log_level=logging.INFO) -> None:
     """Sets the python logging module settings for output
@@ -30,7 +32,8 @@ def set_logger_config_globally(log_level=logging.INFO) -> None:
         handlers=[logging.StreamHandler()],
     )
 
-def name_plate(entries:List[str]):
+
+def name_plate(entries: List[str]):
     """
     Produces the application nameplate.
     Args: two command line argumates, debug mode on or off, operating system
