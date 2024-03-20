@@ -26,9 +26,15 @@ setup:
 	@echo activate venv with 'source venv/bin/activate'
 
 .PHONY: requirements
+REQUIREMENTS_FILE=requirements.txt
 requirements:
-	pip install black isort click
-	pip install -r $(APP_NAME)/requirements.txt
+	pip install -r $(APP_NAME)/$(REQUIREMENTS_FILE)
+	pip install -e .
+
+.PHONY: update-requirements
+REQUIREMENTS_FILE=requirements.txt.blank
+update-requirements: requirements
+	pip freeze --exclude-editable > $(APP_NAME)/requirements.txt
 
 lint:
 	black $(APP_NAME)/.
