@@ -10,7 +10,7 @@ authors = [
 version = "0.0.2"
 description = "core low level api for songbird"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dynamic = ["dependencies"]
 
 [tool.setuptools.dynamic]
