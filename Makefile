@@ -17,7 +17,6 @@ endif
 
 # variables as a list, required for pytest targets
 # in this makefile
-ENV_VARS = $(shell cat $(ENV).env | xargs)
 
 .PHONY: setup
 setup:
@@ -41,4 +40,4 @@ lint:
 	black $(APP_NAME)/.
 
 test:
-	$(ENV_VARS) python -m pytest test/unit -v
+	python -m pytest tests/unit -v
