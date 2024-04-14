@@ -34,6 +34,7 @@ requirements:
 .PHONY: update-requirements
 REQUIREMENTS_FILE=requirements.txt.blank
 update-requirements: requirements
+	rm $(APP_NAME)/requirements.txt
 	pip freeze --exclude-editable > $(APP_NAME)/requirements.txt
 
 lint:
