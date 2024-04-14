@@ -83,6 +83,7 @@ def get_video_links(
 
     return link_list, links
 
+
 class YtDlLogger(object):
     """
     Used for setting up youtube_dl logging
@@ -122,6 +123,7 @@ def my_hook(d):
     if d["status"] == "error":
         logger.error("Error occured during download.")
         success_downloading = False
+
 
 def run_download(url: str, file_path_no_format: str, file_format: str) -> str:
     """Run a download from youtube

@@ -20,17 +20,17 @@ class SimpleSession:
         self.headers = headers
         if headers is None:
             self.headers = {  # default header is copied from linux pc after submitting request
-				"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-				"Accept-Encoding": "gzip, deflate, br",
-				"Accept-Language": "en-US,en;q=0.5",
-				"Connection": "keep-alive",
-				"Host": "www.youtube.com",
-				"Sec-Fetch-Dest": "document",
-				"Sec-Fetch-Mode": "navigate",
-				"Sec-Fetch-Site": "cross-site",
-				"Upgrade-Insecure-Requests": "1",
-				"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-        }
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Connection": "keep-alive",
+                "Host": "www.youtube.com",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "cross-site",
+                "Upgrade-Insecure-Requests": "1",
+                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            }
         self.current_url = ""
 
         # initialize a session for this class.. to be used for all requests
@@ -74,7 +74,7 @@ class SimpleSession:
         form_inputs.update(payload)
         if log_calls:
             logger.info(f"Auto filled the web form with inputs: {form_inputs}")
-        
+
         form_response.close()
         return form_inputs
 

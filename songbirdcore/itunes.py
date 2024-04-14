@@ -164,6 +164,7 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel):
         )
         return False
 
+
 def convert_mp3_to_itunes_format(input_filename):
     """Convert the mp3 file to itunes format, updating tags to the new itunes standard.
     Args:
@@ -176,6 +177,7 @@ def convert_mp3_to_itunes_format(input_filename):
     output_filename = input_filename.replace(".mp3", ".m4a")
     song_file.export(output_filename, format="ipod")
     return output_filename
+
 
 def query_api(
     search_variable: str, limit: int, mode: modes.Modes, lookup: bool = False

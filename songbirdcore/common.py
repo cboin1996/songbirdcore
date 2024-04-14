@@ -77,6 +77,7 @@ def fname_duper(fname: str, limit: int, count: int, dup_key: str):
 
     return fname
 
+
 def remove_illegal_characters(filename):
     """
     Used for stripping file names of illegal characters used for saving
@@ -139,4 +140,3 @@ def pretty_list_of_basemodel_printer(list_of_dicts: List[BaseModel], ignore_keys
 def pretty_lst_printer(lyst: List):
     for idx, item in enumerate(lyst):
         logger.info(f"\t [{idx}] - {item}")
-
