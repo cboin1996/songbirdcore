@@ -1,5 +1,6 @@
 import pytest
 
+
 class TestSimpleSession:
     def setup_test(self):
         # self.session = web.SimpleSession("youtube", root_url=youtube_home_url, headers=headers)

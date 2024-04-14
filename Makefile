@@ -38,6 +38,7 @@ update-requirements: requirements
 
 lint:
 	black $(APP_NAME)/.
+	black tests
 
 test:
 	python -m pytest tests/unit -v
