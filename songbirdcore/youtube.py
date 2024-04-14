@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from typing import Tuple, List
 import requests_html
 from bs4 import BeautifulSoup
 import os, sys
@@ -21,7 +22,7 @@ def get_video_links(
     render_wait: float,
     retry_count: Optional[int] = 3,
     render_sleep: Optional[int] = 1,
-):
+) -> Tuple[List[str], List[requests_html.Element]]:
     """
     Args:
         render_timeout (int): amount of time before abandoning a render
@@ -80,21 +81,7 @@ def get_video_links(
         else:
             links.pop(idx)
 
-    # Allow user to select the link they want to download
-    common.pretty_lst_printer(link_list)
-
-    video_selection_idx = common.select_items_from_list(
-        "Select the song you wish to download!",
-        link_list,
-        1,
-        return_value=False,
-    )
-    if video_selection_idx is None or len(video_selection_idx) == 0:
-        return None
-
-    video_url = youtube_home_url + links[video_selection_idx[0]].attrs["href"]
-    return video_url
-
+    return link_list, links
 
 class YtDlLogger(object):
     """
@@ -136,7 +123,6 @@ def my_hook(d):
         logger.error("Error occured during download.")
         success_downloading = False
 
-
 def run_download(url: str, file_path_no_format: str, file_format: str) -> str:
     """Run a download from youtube
 
@@ -171,46 +157,3 @@ def run_download(url: str, file_path_no_format: str, file_format: str) -> str:
     except Exception as e:
         logger.exception(f"Failed to complete the download of song at url: {url}.")
         return None
-
-
-def run_download_process(
-    file_path_no_format: str,
-    youtube_home_url: str,
-    youtube_search_url: str,
-    youtube_query_payload: dict,
-    file_format: str,
-    render_timeout: int,
-    render_wait: float,
-    render_retries: int,
-    render_sleep: int,
-) -> str:
-    """Download a song from youtube.
-
-    Args:
-        file_name (str): the absolute path of where to save the file
-        youtube_home_url (str): the url to youtube's home page
-        youtube_search_url (str): the search url for youtube
-        youtube_query_payload (str): the query payload for youtube's search api
-        file_format (str): desired file format
-        render_timeout (int): amount of time before abandoning a render
-        render_wait (float): the amount of time before attempting a render
-        render_retries (int): the number of retries for a render
-        render_sleep (int): the amount of time to wait after rendering
-
-    Returns:
-        str: the path on disk that the file was saved to. None if the download fails.
-    """
-    # obtain video selection from user
-    video_url = get_video_links(
-        youtube_home_url,
-        youtube_search_url,
-        youtube_query_payload,
-        render_timeout,
-        render_wait,
-        render_retries,
-        render_sleep,
-    )
-    if video_url is None:
-        return
-    # Process the download, and save locally
-    return run_download(video_url, file_path_no_format, file_format)

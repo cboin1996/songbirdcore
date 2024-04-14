@@ -19,9 +19,18 @@ class SimpleSession:
         self.credentials = {}
         self.headers = headers
         if headers is None:
-            self.headers = {  # default header is generic old mac
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15"
-            }
+            self.headers = {  # default header is copied from linux pc after submitting request
+				"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+				"Accept-Encoding": "gzip, deflate, br",
+				"Accept-Language": "en-US,en;q=0.5",
+				"Connection": "keep-alive",
+				"Host": "www.youtube.com",
+				"Sec-Fetch-Dest": "document",
+				"Sec-Fetch-Mode": "navigate",
+				"Sec-Fetch-Site": "cross-site",
+				"Upgrade-Insecure-Requests": "1",
+				"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+        }
         self.current_url = ""
 
         # initialize a session for this class.. to be used for all requests
@@ -44,6 +53,7 @@ class SimpleSession:
         except requests.exceptions.RequestException as e:
             logger.error(f"Error submitting request to: {form_url}", e)
             return None
+
         if log_calls:
             logger.info(f"Loaded web page: {form_response.url}!")
         # incase you want to parse through the login page.. see below comment
@@ -64,6 +74,8 @@ class SimpleSession:
         form_inputs.update(payload)
         if log_calls:
             logger.info(f"Auto filled the web form with inputs: {form_inputs}")
+        
+        form_response.close()
         return form_inputs
 
     def enter_search_form(
@@ -72,7 +84,7 @@ class SimpleSession:
         form_url: Optional[str] = None,
         payload: Optional[dict] = None,
         render_timeout: Optional[int] = 10,
-        render_wait: Optional[int] = 0.2,
+        render_wait: Optional[float] = 0.2,
         render_sleep: Optional[int] = 1,
         log_calls: Optional[bool] = True,
     ):
@@ -95,15 +107,18 @@ class SimpleSession:
             return None
         try:
             response = self.s.get(search_url, params=form_inputs, headers=self.headers)
-        except requests.exceptions.RequestException as e:  # This is the correct syntax
+        except requests.exceptions.RequestException as e:
             logger.error(f"Error submitting request to: {search_url}", e)
             return None
 
         logger.debug("Rendering html for : " + response.url)
+        # TODO: FIX RENDER TIMEOUT ISSUE
         response.html.render(
             timeout=render_timeout, wait=render_wait, sleep=render_sleep
         )
         logger.debug("Rendering complete for : " + response.url)
+
+        response.close()
         return response
 
     def close(self):

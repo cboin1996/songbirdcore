@@ -164,39 +164,6 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel):
         )
         return False
 
-
-# entity is usually song for searching songs
-def parse_itunes_search_api(
-    search_variable: str, mode: modes.Modes, limit: int = 20, lookup: bool = False
-) -> itunes_api.ItunesApiSongModel:
-    parsed_results_list = query_api(search_variable, limit, mode, lookup=lookup)
-
-    # Present results to user
-    common.pretty_list_of_basemodel_printer(parsed_results_list)
-    logger.info("Searched for: %s" % (search_variable))
-    # Only one item can be selected
-    user_selection = common.select_items_from_list(
-        "Select the number for the properties you want",
-        parsed_results_list,
-        1,
-        no_selection_value=-1,
-    )
-
-    # user has quit
-    if user_selection is None:
-        logger.info("Quitting.")
-        return
-    if len(user_selection) == 0:
-        logger.info("Continuing without properties.")
-        return []
-
-    print(f"Selected item: ")
-    for k, v in user_selection[0].dict().items():
-        print(" - %s : %s" % (k, v))
-
-    return user_selection[0]
-
-
 def convert_mp3_to_itunes_format(input_filename):
     """Convert the mp3 file to itunes format, updating tags to the new itunes standard.
     Args:
@@ -209,62 +176,6 @@ def convert_mp3_to_itunes_format(input_filename):
     output_filename = input_filename.replace(".mp3", ".m4a")
     song_file.export(output_filename, format="ipod")
     return output_filename
-
-
-def remove_songs_selected(song_properties_list):
-    common.pretty_list_of_basemodel_printer(song_properties_list)
-    input_string = "Enter song id's (1 4 5 etc.) you dont want from this album"
-    user_input = common.select_items_from_list(
-        input_string,
-        song_properties_list,
-        n_choices=len(song_properties_list) - 1,
-        sep=" ",
-        opposite=True,
-        no_selection_value=-1,
-    )
-    # user has quit
-    if user_input == None:
-        return None
-    # user selects all songs
-    if user_input == []:
-        return song_properties_list
-    # otherwise, user gets the processed list with their items removed
-    return user_input
-
-
-def launch_album_mode(artist_album_string=""):
-    """
-    Args:
-        artist_album_string (str): the album/artist to search for.
-    Returns: the list of song properties gathered from the search.
-
-    """
-    while True:
-        album_props = parse_itunes_search_api(
-            search_variable=artist_album_string, mode=modes.Modes.ALBUM, lookup=False
-        )
-        # check if user quit
-        if album_props is None:
-            return None
-
-        # get the song matching the album metadata
-        songs_in_album_props = query_api(
-            search_variable=album_props.collectionId,  # get list of songs for chosen album
-            limit=album_props.trackCount,
-            mode=modes.Modes.SONG,
-            lookup=True,
-        )
-        if songs_in_album_props == None:
-            logger.error("Sorry. Cant seem to find any details for this album!")
-
-        songs_in_album_props = remove_songs_selected(
-            song_properties_list=songs_in_album_props
-        )
-        if songs_in_album_props is None:
-            return None
-
-        return songs_in_album_props
-
 
 def query_api(
     search_variable: str, limit: int, mode: modes.Modes, lookup: bool = False
