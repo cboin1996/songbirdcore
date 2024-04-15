@@ -12,11 +12,8 @@ isort
 mutagen
 pydantic
 pydantic-settings
-pyppeteer>=1.0.0
 pytest
 pytest-cov
 python-dotenv
 requests
-requests-html
-lxml_html_clean
 yt-dlp
