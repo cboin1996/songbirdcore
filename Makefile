@@ -17,7 +17,6 @@ endif
 
 # variables as a list, required for pytest targets
 # in this makefile
-ENV_VARS = $(shell cat $(ENV).env | xargs)
 
 .PHONY: setup
 setup:
@@ -26,12 +25,20 @@ setup:
 	@echo activate venv with 'source venv/bin/activate'
 
 .PHONY: requirements
+REQUIREMENTS_FILE=requirements.txt
 requirements:
-	pip install black isort click
-	pip install -r $(APP_NAME)/requirements.txt
+	pip install -r $(APP_NAME)/$(REQUIREMENTS_FILE)
+	pip install -e .
+
+.PHONY: update-requirements
+REQUIREMENTS_FILE=requirements.txt.blank
+update-requirements: requirements
+	rm $(APP_NAME)/requirements.txt
+	pip freeze --exclude-editable > $(APP_NAME)/requirements.txt
 
 lint:
 	black $(APP_NAME)/.
+	black tests
 
 test:
-	$(ENV_VARS) python -m pytest test/unit -v
+	python -m pytest --doctest-modules --junitxml=junit/test-results.xml --cov=songbirdcore --cov-report=xml --cov-report=html tests/unit -v
