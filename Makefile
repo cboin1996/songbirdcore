@@ -29,6 +29,8 @@ REQUIREMENTS_FILE=requirements.txt
 requirements:
 	pip install -r $(APP_NAME)/$(REQUIREMENTS_FILE)
 	pip install -e .
+	pip install -e ../requests-html
+	playwright install
 
 .PHONY: update-requirements
 update-requirements:
@@ -37,6 +39,7 @@ update-requirements:
 	pip freeze --exclude-editable > $(APP_NAME)/requirements.txt
 	pip install -e .
 	pip install -e ../requests-html
+	playwright install
 
 lint:
 	black $(APP_NAME)/.
