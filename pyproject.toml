@@ -15,3 +15,6 @@ dynamic = ["dependencies"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["songbirdcore/requirements.txt"]}
+
+[tool.setuptools.packages.find]
+exclude = ["junit"]

@@ -41,4 +41,4 @@ lint:
 	black tests
 
 test:
-	python -m pytest tests/unit -v
+	python -m pytest --doctest-modules --junitxml=junit/test-results.xml --cov=songbirdcore --cov-report=xml --cov-report=html tests/unit -v
