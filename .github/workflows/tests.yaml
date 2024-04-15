@@ -24,6 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r songbirdcore/requirements.txt
           pip install -U git+https://github.com/cboin1996/requests-html@dev
+          playwright install
       - name: Test with pytest
         run: |
           python -m pytest --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}.xml --cov=songbirdcore --cov-report=xml --cov-report=html tests/unit -v
