@@ -48,7 +48,9 @@ def name_plate(entries: List[str]):
         print(entry)
     print("===============================")
     print("Message from developer:")
-    print("\t- dependencies have been upgraded, make sure you have run 'playwright install'.")
+    print(
+        "\t- dependencies have been upgraded, make sure you have run 'playwright install'."
+    )
     print(
         "\t- If you encounter errors, please create an issue here https://github.com/cboin1996/songbirdcore/issues/"
     )
