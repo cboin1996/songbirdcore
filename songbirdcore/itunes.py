@@ -225,13 +225,13 @@ def query_api(
     for index, search_result in enumerate(itunes_json_dict["results"]):
         try:
             if mode == modes.Modes.SONG:
-                result = itunes_api.ItunesApiSongModel.parse_obj(search_result)
+                result = itunes_api.ItunesApiSongModel.model_validate(search_result)
                 year = search_result[result.releaseDateKey].split("-")[
                     0
                 ]  # will grab the year from date formatted 2016-06-01
                 result.releaseDate = year
             elif mode == modes.Modes.ALBUM:
-                result = itunes_api.ItunesApiAlbumKeys.parse_obj(search_result)
+                result = itunes_api.ItunesApiAlbumKeys.model_validate(search_result)
 
             parsed_results_list.append(result)
         except ValidationError as e:

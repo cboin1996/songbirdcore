@@ -8,7 +8,7 @@ import os
     "video_url",
     [
         "https://www.youtube.com/watch?v=Ixrje2rXLMA",
-        "https://www.youtube.com/watch?v=Ixrje2rXLMA",
+        "https://www.youtube.com/watch?v=wOwblaKmyVw",
     ],
 )
 @pytest.mark.parametrize("fmt", ["m4a", "mp3"])

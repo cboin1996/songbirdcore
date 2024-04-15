@@ -131,7 +131,7 @@ def pretty_list_of_basemodel_printer(list_of_dicts: List[BaseModel], ignore_keys
     logger.info("------------------------")
     for element in reversed(list_of_dicts):
         logger.info(i)
-        for k, v in element.dict().items():
+        for k, v in element.model_dump().items():
             if ignore_keys is not None:
                 if (
                     k not in ignore_keys
