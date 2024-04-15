@@ -47,11 +47,11 @@ def name_plate(entries: List[str]):
     for entry in entries:
         print(entry)
     print("===============================")
+    print("Message from developer:")
+    print("\t- dependencies have been upgraded, make sure you have run 'playwright install'.")
     print(
-        "Message to users: Currently yt-dlp version is held back and producing errors."
+        "\t- If you encounter errors, please create an issue here https://github.com/cboin1996/songbirdcore/issues/"
     )
-    print("\tThese errors will be fixed once the upstream dependencies match yt-dlps.")
-    print("\tSee https://github.com/cboin1996/songbirdcore/issues/5 for more info.")
     print(
         f"At the main menu, type one of {[mode.value for mode in modes.Modes]} to switch modes!"
     )
