@@ -50,7 +50,8 @@ def name_plate(entries: List[str]):
     print(
         "Message to users: Currently yt-dlp version is held back and producing errors."
     )
-    print("These errors will be fixed once the upstream dependencies match yt-dlps.")
+    print("\tThese errors will be fixed once the upstream dependencies match yt-dlps.")
+    print("\tSee https://github.com/cboin1996/songbirdcore/issues/5 for more info.")
     print(
         f"At the main menu, type one of {[mode.value for mode in modes.Modes]} to switch modes!"
     )
