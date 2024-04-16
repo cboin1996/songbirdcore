@@ -1,8 +1,6 @@
 name: tests
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -22,8 +20,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
           python -m pip install --upgrade pip
-          pip install -r songbirdcore/requirements.txt
-          pip install -U git+https://github.com/cboin1996/requests-html@dev
+          pip install -e .[dev]
           playwright install
       - name: Test with pytest
         run: |

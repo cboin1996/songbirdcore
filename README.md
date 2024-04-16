@@ -11,18 +11,28 @@ See:
 ## Requirements
 
 - Python version >= 3.11
-- Clone [my fork of requests-html: requests-htmlc](git@github.com:cboin1996/requests-html.git)
 
-    ```bash
-        git clone https://github.com/cboin1996/requests-html.git
-        git checkout dev
-    ```
+## Installation
+
+To install, run
+
+```bash
+pip install songbirdcore
+```
+
+To install the latest development version from `test-pypi`
+run
+
+```bash
+    python3 -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ songbirdcore
+```
 
 ## Development
 
 Once you have clone the repository, run
 
 ```bash
+export ENV=dev
 make setup
 source venv/bin/activate
 make requirements
@@ -30,6 +40,16 @@ make requirements
 
 This configures a virtual environment locally.
 You can then run tests by performing the steps below.
+
+### Updating Requirements
+
+Updating the requirements for this package may be done
+through
+
+```bash
+make update-requirements
+make requirements
+```
 
 ## Tests
 

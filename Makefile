@@ -1,4 +1,5 @@
 APP_NAME=songbirdcore
+REQUIREMENTS_FILE=requirements.txt
 .PHONY: env
 env:
 # check ENV env var has been set
@@ -19,27 +20,32 @@ endif
 # in this makefile
 
 .PHONY: setup
-setup:
+setup: env
 	@echo sets up the development environment
 	python3 -m venv venv
 	@echo activate venv with 'source venv/bin/activate'
 
 .PHONY: requirements
-REQUIREMENTS_FILE=requirements.txt
-requirements:
+requirements: env
 	pip install -r $(APP_NAME)/$(REQUIREMENTS_FILE)
-	pip install -e .
+# only install dependencies locally if in dev env
+ifeq ($(ENV), dev)
+	echo "install dev dependencies"
+	pip install -e .[dev]
+	pip uninstall requests-htmlc
 	pip install -e ../requests-html
+else
+	pip install -e .
+endif
 	playwright install
 
 .PHONY: update-requirements
-update-requirements:
-	rm $(APP_NAME)/requirements.txt
+update-requirements: env
+	pip uninstall requests-htmlc
+	pip freeze --exclude-editable | xargs pip uninstall -y
+	rm $(APP_NAME)/$(REQUIREMENTS_FILE) || true
 	pip install -r $(APP_NAME)/requirements.txt.blank
-	pip freeze --exclude-editable > $(APP_NAME)/requirements.txt
-	pip install -e .
-	pip install -e ../requests-html
-	playwright install
+	pip freeze --exclude-editable > $(APP_NAME)/$(REQUIREMENTS_FILE)
 
 lint:
 	black $(APP_NAME)/.
