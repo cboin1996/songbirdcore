@@ -1,6 +1,5 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
-# only run this workflow if tests has completed successfully on the main branch
 on: push
 
 jobs:
