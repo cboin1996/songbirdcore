@@ -4,7 +4,6 @@ on: push
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Build distribution 📦
     runs-on: ubuntu-latest
     
