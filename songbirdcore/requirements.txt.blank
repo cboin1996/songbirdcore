@@ -1,6 +1,4 @@
 beautifulsoup4
-black
-click
 eyed3
 google-api-core
 google-api-python-client
@@ -8,12 +6,10 @@ google-auth
 google-auth-httplib2
 google-auth-oauthlib
 googleapis-common-protos
-isort
 mutagen
 pydantic
 pydantic-settings
-pytest
-pytest-cov
+requests-htmlc @ git+https://github.com/cboin1996/requests-html@dev
 python-dotenv
 requests
 yt-dlp

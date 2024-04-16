@@ -7,7 +7,7 @@ name = "songbirdcore"
 authors = [
     {name = "Christian Boin"},
 ]
-version = "0.0.4"
+version = "0.0.5"
 description = "core low level api for songbird"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,6 +15,21 @@ dynamic = ["dependencies"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["songbirdcore/requirements.txt"]}
+
+[project.optional-dependencies]
+# these dependencies are required for development,
+# not for running the package.
+dev = [
+    "black",
+    "click",
+    "isort",
+    "pytest",
+    "pytest-cov",
+]
+package = [
+    "build",
+    "twine"
+]
 
 [tool.setuptools.packages.find]
 exclude = ["junit"]

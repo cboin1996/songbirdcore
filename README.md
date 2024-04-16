@@ -23,13 +23,24 @@ See:
 Once you have clone the repository, run
 
 ```bash
+export ENV=dev
 make setup
-source venv/bin/activate
+source venv-$(ENV)/bin/activate
 make requirements
 ```
 
 This configures a virtual environment locally.
 You can then run tests by performing the steps below.
+
+### Updating Requirements
+
+Updating the requirements for this package may be done
+through
+
+```bash
+make update-requirements
+make requirements
+```
 
 ## Tests
 
@@ -45,3 +56,6 @@ file with the following contents:
     "python.testing.pytestEnabled": true,
 }
 ```
+
+## Packaging
+
