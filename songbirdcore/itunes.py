@@ -2,6 +2,7 @@ from typing import List, Optional, Union
 import glob
 from pydantic import ValidationError
 import requests
+from requests import Response
 import json
 import os, sys
 import eyed3
@@ -260,14 +261,14 @@ def query_api(
     return parsed_results_list
 
 
-def artwork_searcher(url: str) -> Optional[requests.Reponse]:
+def artwork_searcher(url: str) -> Optional[Response]:
     """Album artwork searcher.
 
     Args:
         url (str): the url for the artwork
 
     Returns:
-        requests.Response: the response for the artwork request
+        Response: the response for the artwork request
     """
     artwork_size_list = [
         "100x100",

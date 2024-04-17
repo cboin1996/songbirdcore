@@ -2,6 +2,7 @@ from typing import Optional, List, Dict
 import logging
 from requests_html import HTMLSession
 import requests
+from requests import Response
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class SimpleSession:
         render_wait: Optional[float] = 0.2,
         render_sleep: Optional[int] = 1,
         log_calls: Optional[bool] = True,
-    ) -> Optional[requests.Response]:
+    ) -> Optional[Response]:
         """
         Enter into a search form for a website
         Args:
@@ -100,7 +101,7 @@ class SimpleSession:
             payload (Optional[dict]): optionally include a payload for the request
 
         Returns:
-            Optional[requests.Response]: the rendered html response, or None if failure occurs
+            Optional[Response]: the rendered html response, or None if failure occurs
         """
         if form_url is None:
             form_url = self.root_url
