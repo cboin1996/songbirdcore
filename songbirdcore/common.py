@@ -23,8 +23,10 @@ def load_version(toml_path: str):
 def set_logger_config_globally(log_level=logging.INFO) -> None:
     """Sets the python logging module settings for output
     to stdout and to file.
+
     Args:
-        timestamp (str): the timestamp to name the log file.
+        log_level (str): the log level
+
     """
     logging.basicConfig(
         level=log_level,
@@ -33,11 +35,11 @@ def set_logger_config_globally(log_level=logging.INFO) -> None:
     )
 
 
-def name_plate(entries: List[str]):
-    """
-    Produces the application nameplate.
-    Args: two command line argumates, debug mode on or off, operating system
-    Returns: operating system
+def name_plate(entries: List[str]) -> None:
+    """renders the songbird entrypoint name plate
+
+    Args:
+        entries (List[str]): add additional entries to the nameplate via this list
     """
     # load project version from file
     print("===============================")
@@ -59,7 +61,7 @@ def name_plate(entries: List[str]):
     )
 
 
-def fname_duper(fname: str, limit: int, count: int, dup_key: str):
+def fname_duper(fname: str, limit: int, count: int, dup_key: str) -> Optional[str]:
     """Generates a duplicate filename for when a filename already exists
 
     Args:
@@ -85,12 +87,15 @@ def fname_duper(fname: str, limit: int, count: int, dup_key: str):
     return fname
 
 
-def remove_illegal_characters(filename):
+def remove_illegal_characters(filename) -> str:
     """
     Used for stripping file names of illegal characters used for saving
+
     Args:
-        filename(str): the file's name to strip
-    Returns: stipped file name
+        filename (str): the file's name to strip illegal characters from
+
+    Returns:
+        str: stripped file name
     """
     return (
         filename.replace("\\", "")
@@ -120,12 +125,15 @@ def find_file(path: str, filename: str) -> List[str]:
     return paths
 
 
-def pretty_list_of_basemodel_printer(list_of_dicts: List[BaseModel], ignore_keys=None):
+def pretty_list_of_basemodel_printer(
+    list_of_dicts: List[BaseModel], ignore_keys: Optional[List[str]] = None
+):
     """
-    prints list from top down so its more user friendly, items are pretty big
-    params:
-        list_of_dicts: list of dictionaries to print
-        ignore_keys: any keys not to print
+    renders a list to stdio given a list of pydantic BaseModel objects
+
+    Args:
+        list_of_dicts (List[BaseModel]): list of dictionaries to print
+        ignore_keys (Optional[List[str]], optional): any keys/fields in BaseModel not to print
     """
     i = len(list_of_dicts) - 1
     logger.info("------------------------")
@@ -145,5 +153,10 @@ def pretty_list_of_basemodel_printer(list_of_dicts: List[BaseModel], ignore_keys
 
 
 def pretty_lst_printer(lyst: List):
+    """print a list to stdio
+
+    Args:
+        lyst (List): the list to print
+    """
     for idx, item in enumerate(lyst):
         logger.info(f"\t [{idx}] - {item}")

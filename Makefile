@@ -22,6 +22,7 @@ endif
 .PHONY: setup
 setup: env
 	@echo sets up the development environment
+	npm install -g markdownlint-cli
 	python3 -m venv venv
 	@echo activate venv with 'source venv/bin/activate'
 
@@ -46,6 +47,22 @@ update-requirements: env
 	rm $(APP_NAME)/$(REQUIREMENTS_FILE) || true
 	pip install -r $(APP_NAME)/requirements.txt.blank
 	pip freeze --exclude-editable > $(APP_NAME)/$(REQUIREMENTS_FILE)
+
+# documentation targets
+.PHONY: docs-lint
+docs-lint:
+	@echo linting files at docs/**/*.md
+	markdownlint docs/**/*.md
+
+.PHONY: docs-serve
+docs-serve:
+	@echo serving the site on http://localhost:8000
+	mkdocs serve
+
+.PHONY: docs-build
+docs-build:
+	@echo building the site
+	mkdocs build --strict --verbose --site-dir public
 
 lint:
 	black $(APP_NAME)/.

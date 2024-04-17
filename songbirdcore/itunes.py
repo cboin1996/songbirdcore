@@ -2,6 +2,7 @@ from typing import List, Optional, Union
 import glob
 from pydantic import ValidationError
 import requests
+from requests import Response
 import json
 import os, sys
 import eyed3
@@ -21,11 +22,13 @@ def itunes_lib_search(
 ) -> List[str]:
     """
     Performs a search on users iTunes library by album, artist and genre
+
     Args:
         itunes_lib_path (str): path to itunes song library on disk
         search_parameters (str): search term
         album_properties (itunes_api.ItunesApiAlbumKeys): determines whether to do a smarter search based on given album properties
-    Returns: iTunesPaths dict with songs matching the search added
+
+    Returns: a list of songpaths found
     """
     itunes_songs = glob.glob(
         os.path.join(itunes_lib_path, "*", "*", f"*.*"), recursive=True
@@ -62,24 +65,30 @@ def itunes_lib_search(
 
 def m4a_tagger(file_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
     """Tag an m4a file using iTunes recognized tags.
-    Legend taken from mutagen website.
-    Text values
-    '\xa9nam' - track title
-    '\xa9alb' - album
-    '\xa9ART' - artist
+
+    The below is a tag legend taken from mutagen website.
+    Text values:
+
+    ```
+    '\\xa9nam' - track title
+    '\\xa9alb' - album
+    '\\xa9ART' - artist
     'aART' - album artist
-    '\xa9day' - year
+    '\\xa9day' - year
     'purd' - purchase date
-    '\xa9gen' - genre
+    '\\xa9gen' - genre
     Tuples of ints (multiple values per key are supported):
     'trkn' - track number, total tracks
     'disk' - disc number, total discs
     'covr' - cover artwork, list of MP4Cover objects (which are tagged strs)
+    ```
 
     Args:
         file_path (str): path to the m4a file
-        song_keys (itunes_api.ItunesApiSongModel): The model for the songs relevant metadata collected from itunes search api
-    Returns: bool: true if tagging was successful.
+        song_tag_data (itunes_api.ItunesApiSongModel): The model for the songs relevant metadata collected from itunes search api
+
+    Returns:
+        bool: true if tagging was successful.
     """
     try:
         logger.info(f"Adding tags to m4a file : {file_path}")
@@ -116,9 +125,16 @@ def m4a_tagger(file_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> 
         return False
 
 
-def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel):
+def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
     """
-    Tags an mp3 file at mp3_path given a dictionary of tags
+    Tags an mp3 file at mp3_path given a itunes_api.ItunesApiSongModel object
+
+    Args:
+        mp3_path (str): file path of mp3 file
+        song_tag_data (itunes_api.ItunesApiSongModel): the model with tag fields
+
+    Returns:
+        bool: true if tagging was a success
     """
     try:
         # Create MP3File instance.
@@ -134,7 +150,7 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel):
         audiofile = eyed3.load(mp3_path)
         audiofile.tag.artist = song_tag_data.artistName
         audiofile.tag.album = song_tag_data.collectionName
-        audiofile.tag.title = song_tag_data.trackName
+        audiofile.tag.title = song_tag_data.TRACK_NAME
         audiofile.tag.genre = song_tag_data.primaryGenreName
         audiofile.tag.track_num = (song_tag_data.trackNumber, song_tag_data.trackCount)
         audiofile.tag.disc_num = (song_tag_data.discNumber, song_tag_data.discCount)
@@ -183,11 +199,14 @@ def query_api(
     search_variable: str, limit: int, mode: modes.Modes, lookup: bool = False
 ) -> List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]:
     """
-    params:
+    Args:
         search_variable (str): the term to search itunes api for
-        limit (int): limit of the search in the api
-        entity (modes.Modes): value of album, or song for now
-        lookup: if true, perform a lookup search via itunes api rather than a default search
+        limit  (int): limit of the search in the api
+        mode (modes.Modes): value of album, or song for now
+        lookup (bool): if true, perform a lookup search via itunes api rather than a default search
+    Returns
+        List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]: a list containing a
+            tuple with itunes song properties and album properties
     """
     parsed_results_list = []
     result_dict = {}
@@ -242,14 +261,14 @@ def query_api(
     return parsed_results_list
 
 
-def artwork_searcher(url):
+def artwork_searcher(url: str) -> Optional[Response]:
     """Album artwork searcher.
 
     Args:
         url (str): the url for the artwork
 
     Returns:
-        requests.Response: the response for the artwork request
+        Response: the response for the artwork request
     """
     artwork_size_list = [
         "100x100",

@@ -7,7 +7,7 @@ name = "songbirdcore"
 authors = [
     {name = "Christian Boin"},
 ]
-version = "0.0.5"
+version = "0.0.6"
 description = "core low level api for songbird"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,11 +20,18 @@ dependencies = {file = ["songbirdcore/requirements.txt"]}
 # these dependencies are required for development,
 # not for running the package.
 dev = [
+    # lint
     "black",
     "click",
     "isort",
+    # test
     "pytest",
     "pytest-cov",
+    # docs
+    "mkdocs",
+    "mkdocs-material",
+    "mike",
+    "mkdocstrings-python"
 ]
 package = [
     "build",
