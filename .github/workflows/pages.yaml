@@ -43,7 +43,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [lint, test]
     steps:
       - uses: actions/checkout@v4
       - name: set up Python 3.11
