@@ -1,0 +1,2 @@
+::: songbirdcore.youtube
+    handler: python

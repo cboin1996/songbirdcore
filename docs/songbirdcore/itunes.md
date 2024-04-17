@@ -1,0 +1,2 @@
+::: songbirdcore.itunes
+    handler: python

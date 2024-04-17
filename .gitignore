@@ -27,3 +27,7 @@ coverage.xml
 # Secrets
 credentials.json
 token.json
+
+# mkdocs
+public
+test

@@ -8,6 +8,10 @@ See:
 - [songbirdcli](https://github.com/cboin1996/songbird.git)
 - [songbirdapi](https://github.com/cboin1996/songbirdapi.git)
 
+## Documentation
+
+`songbirdcore`'s documentation may be found [here](https://cboin1996.github.io/songbirdcore)
+
 ## Requirements
 
 - Python version >= 3.11

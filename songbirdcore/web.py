@@ -38,13 +38,17 @@ class SimpleSession:
 
     def get_form_inputs(
         self, form_url: str, payload={}, log_calls: Optional[bool] = True
-    ):
+    ) -> Optional[dict]:
         """Get the inputs for a form on a webpage
 
         Args:
             form_url (str): the url for the form
-            user_input_on (bool, optional): _description_. Defaults to True.
-            payload (dict, optional): _description_. Defaults to {}.
+            payload (dict, optional): the payload to insert into the form. Defaults to {}.
+            log_calls (Optional[bool], optional): whether to log information within this method
+
+        Returns:
+            Optional[dict]: a dictionary containing the form
+                inputs for the form_url, updated with payload
         """
         # initialize form_inputs to be empty each request
         form_inputs = {}
@@ -87,7 +91,7 @@ class SimpleSession:
         render_wait: Optional[float] = 0.2,
         render_sleep: Optional[int] = 1,
         log_calls: Optional[bool] = True,
-    ):
+    ) -> Optional[requests.Response]:
         """
         Enter into a search form for a website
         Args:
@@ -96,7 +100,7 @@ class SimpleSession:
             payload (Optional[dict]): optionally include a payload for the request
 
         Returns:
-            requests.Response: the rendered html response
+            Optional[requests.Response]: the rendered html response, or None if failure occurs
         """
         if form_url is None:
             form_url = self.root_url
@@ -112,7 +116,6 @@ class SimpleSession:
             return None
 
         logger.debug("Rendering html for : " + response.url)
-        # TODO: FIX RENDER TIMEOUT ISSUE
         response.html.render(
             timeout=render_timeout, wait=render_wait, sleep=render_sleep
         )

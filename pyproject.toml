@@ -20,11 +20,18 @@ dependencies = {file = ["songbirdcore/requirements.txt"]}
 # these dependencies are required for development,
 # not for running the package.
 dev = [
+    # lint
     "black",
     "click",
     "isort",
+    # test
     "pytest",
     "pytest-cov",
+    # docs
+    "mkdocs",
+    "mkdocs-material",
+    "mike",
+    "mkdocstrings-python"
 ]
 package = [
     "build",

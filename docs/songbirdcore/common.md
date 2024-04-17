@@ -1,0 +1,2 @@
+::: songbirdcore.common
+    handler: python

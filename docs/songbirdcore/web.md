@@ -1,0 +1,2 @@
+::: songbirdcore.web
+    handler: python

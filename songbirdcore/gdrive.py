@@ -20,7 +20,21 @@ def save_song(
     song_path: str,
     auth_port: int,
     bind_addr: Optional[str] = None,
-):
+) -> str:
+    """save a song to google drive
+
+    Args:
+        gdrive_folder_id (str): google drive folder id
+        credentials_path (str): path to a credentials.json file
+        token_path (str): path to a google cloud token file
+        song_name (str): the name of the song (filename)
+        song_path (str): the path of the song locally
+        auth_port (int): the port to use for oauth
+        bind_addr (Optional[str], optional): optionally specify the bind address, otherwise localhost is used. Defaults to None.
+
+    Returns:
+        str: the file id of the upload
+    """
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
