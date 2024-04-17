@@ -22,7 +22,6 @@ endif
 .PHONY: setup
 setup: env
 	@echo sets up the development environment
-	npm install -g markdownlint-cli
 	python3 -m venv venv
 	@echo activate venv with 'source venv/bin/activate'
 
