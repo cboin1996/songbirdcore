@@ -41,7 +41,7 @@ def name_plate(entries: List[str]) -> None:
     Args:
         entries (List[str]): add additional entries to the nameplate via this list
     """
-   # load project version from file
+    # load project version from file
     print("===============================")
     print("=----Welcome to songbird🐦----=")
     print("===============================")
@@ -125,7 +125,9 @@ def find_file(path: str, filename: str) -> List[str]:
     return paths
 
 
-def pretty_list_of_basemodel_printer(list_of_dicts: List[BaseModel], ignore_keys: Optional[List[str]]=None):
+def pretty_list_of_basemodel_printer(
+    list_of_dicts: List[BaseModel], ignore_keys: Optional[List[str]] = None
+):
     """
     renders a list to stdio given a list of pydantic BaseModel objects
 

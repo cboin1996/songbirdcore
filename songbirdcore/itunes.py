@@ -127,11 +127,11 @@ def m4a_tagger(file_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> 
 def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
     """
     Tags an mp3 file at mp3_path given a itunes_api.ItunesApiSongModel object
-    
+
     Args:
         mp3_path (str): file path of mp3 file
         song_tag_data (itunes_api.ItunesApiSongModel): the model with tag fields
-    
+
     Returns:
         bool: true if tagging was a success
     """

@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class Modes(Enum):
-    """enum class containing songbirdcore modes
-    """
+    """enum class containing songbirdcore modes"""
+
     ALBUM = "album"
     """Specifies album mode"""
     SONG = "song"
