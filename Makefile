@@ -69,3 +69,6 @@ lint:
 
 test:
 	python -m pytest --doctest-modules --junitxml=junit/test-results.xml --cov=songbirdcore --cov-report=xml --cov-report=html tests/unit -v
+
+test-stdout:
+	python -m pytest --cov=songbirdcore tests/unit -v
