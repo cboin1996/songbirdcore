@@ -96,7 +96,7 @@ class YtDlLogger(object):
         logger.debug(msg)
 
     def warning(self, msg):
-        logger.warninging(msg)
+        logger.warning(msg)
 
     def error(self, msg):
         logger.error(msg)
