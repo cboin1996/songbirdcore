@@ -58,7 +58,7 @@ def get_video_links(
         # Get the list of hrefs to each video on the home page
         links = response.html.find("#video-title")
         if len(links) == 0:
-            logger.warn(f"{tries+1}:{retry_count}.")
+            logger.warning(f"{tries+1}:{retry_count}.")
             tries += 1
             log_attempts = False
         else:
@@ -68,7 +68,7 @@ def get_video_links(
         logger.error(
             f"Failed to get links from {youtube_home_url} after {retry_count} tries."
         )
-        return None
+        return None, None
 
     link_list = []
     # create a user friendly list, containing videos with title and href refs.
@@ -96,7 +96,7 @@ class YtDlLogger(object):
         logger.debug(msg)
 
     def warning(self, msg):
-        logger.warning(msg)
+        logger.warninging(msg)
 
     def error(self, msg):
         logger.error(msg)

@@ -1,13 +1,17 @@
 import pytest
+from songbirdcore import web
 
 
-class TestSimpleSession:
-    def setup_test(self):
-        # self.session = web.SimpleSession("youtube", root_url=youtube_home_url, headers=headers)
-        pass
+@pytest.fixture()
+def get_youtube_session():
+    return web.SimpleSession("youtube", root_url="https://www.youtube.com")
 
-    def test_get_form_inputs(self):
-        pass
 
-    def test_enter_search_form(self):
-        pass
+def test_enter_search_form(get_youtube_session: str):
+    """test entering youtube's main search from"""
+    session = get_youtube_session
+    response = session.enter_search_form(
+        search_url="https://www.youtube.com/results",
+        payload={"search_query": "billy joel"},
+    )
+    assert response is not None and response.status_code == 200

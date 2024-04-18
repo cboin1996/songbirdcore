@@ -150,7 +150,7 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         audiofile = eyed3.load(mp3_path)
         audiofile.tag.artist = song_tag_data.artistName
         audiofile.tag.album = song_tag_data.collectionName
-        audiofile.tag.title = song_tag_data.TRACK_NAME
+        audiofile.tag.title = song_tag_data.trackName
         audiofile.tag.genre = song_tag_data.primaryGenreName
         audiofile.tag.track_num = (song_tag_data.trackNumber, song_tag_data.trackCount)
         audiofile.tag.disc_num = (song_tag_data.discNumber, song_tag_data.discCount)
@@ -179,20 +179,6 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
             f"Unexpected error occured while trying to tag your mp3 file: {e}"
         )
         return False
-
-
-def convert_mp3_to_itunes_format(input_filename):
-    """Convert the mp3 file to itunes format, updating tags to the new itunes standard.
-    Args:
-        input_filename (str): the full path of the file
-    Returns:
-        str: the path to the modified file.
-    """
-    pydub.AudioSegment.ffmpeg = updates.get_path_to_ffmpeg()
-    song_file = pydub.AudioSegment.from_mp3(input_filename)
-    output_filename = input_filename.replace(".mp3", ".m4a")
-    song_file.export(output_filename, format="ipod")
-    return output_filename
 
 
 def query_api(
@@ -254,7 +240,7 @@ def query_api(
 
             parsed_results_list.append(result)
         except ValidationError as e:
-            logger.warn(
+            logger.warning(
                 f"Skipping the display of song at index [{index}] as it could not be loaded into expected format.\n{e}"
             )
 

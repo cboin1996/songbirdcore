@@ -14,7 +14,7 @@ from .version import version
 logger = logging.getLogger(__name__)
 
 
-def load_version(toml_path: str):
+def load_toml(toml_path: str):
     with open(toml_path, "rb") as f:
         data = tomllib.load(f)
     return data
@@ -126,7 +126,7 @@ def find_file(path: str, filename: str) -> List[str]:
 
 
 def pretty_list_of_basemodel_printer(
-    list_of_dicts: List[BaseModel], ignore_keys: Optional[List[str]] = None
+    list_of_models: List[BaseModel], ignore_keys: Optional[List[str]] = None
 ):
     """
     renders a list to stdio given a list of pydantic BaseModel objects
@@ -135,9 +135,9 @@ def pretty_list_of_basemodel_printer(
         list_of_dicts (List[BaseModel]): list of dictionaries to print
         ignore_keys (Optional[List[str]], optional): any keys/fields in BaseModel not to print
     """
-    i = len(list_of_dicts) - 1
+    i = len(list_of_models) - 1
     logger.info("------------------------")
-    for element in reversed(list_of_dicts):
+    for element in reversed(list_of_models):
         logger.info(i)
         for k, v in element.model_dump().items():
             if ignore_keys is not None:
