@@ -39,7 +39,7 @@ pyparsing==3.1.2
 pyquery==2.0.0
 python-dotenv==1.0.1
 requests==2.31.0
-requests-htmlc==0.0.6
+requests-htmlc==0.0.7
 requests-oauthlib==2.0.0
 rsa==4.9
 soupsieve==2.5
