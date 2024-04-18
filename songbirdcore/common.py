@@ -132,7 +132,7 @@ def pretty_list_of_basemodel_printer(
     renders a list to stdio given a list of pydantic BaseModel objects
 
     Args:
-        list_of_dicts (List[BaseModel]): list of dictionaries to print
+        list_of_models (List[BaseModel]): list of pydantic models to print
         ignore_keys (Optional[List[str]], optional): any keys/fields in BaseModel not to print
     """
     i = len(list_of_models) - 1
