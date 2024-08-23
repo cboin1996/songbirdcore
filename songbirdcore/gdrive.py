@@ -48,7 +48,7 @@ def save_song(
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-            creds = flow.run_local_server(port=auth_port, bind_addr=bind_addr)
+            creds = flow.run_local_server(port=auth_port, bind_addr=bind_addr, open=False)
         # Save the credentials for the next run
         with open(token_path, "w") as token:
             token.write(creds.to_json())
@@ -71,8 +71,8 @@ def save_song(
 if __name__ == "__main__":
     fname = "test.txt"
     fpath = os.path.join(sys.path[0], fname)
-    cred_path = os.path.join(sys.path[0], "data", "gdrive", "credentials.json")
-    token_path = os.path.join(sys.path[0], "data", "gdrive", "token.json")
+    cred_path = os.path.join(sys.path[0], "credentials.json")
+    token_path = os.path.join(sys.path[0], "token.json")
     fid = input("Enter folder id: ")
     with open(fpath, "w") as f:
         f.write("swag")
