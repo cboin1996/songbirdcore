@@ -49,7 +49,7 @@ def save_song(
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
             creds = flow.run_local_server(
-                port=auth_port, bind_addr=bind_addr, open=False
+                port=auth_port, bind_addr=bind_addr, open_browser=False
             )
         # Save the credentials for the next run
         with open(token_path, "w") as token:
