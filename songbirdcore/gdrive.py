@@ -48,7 +48,9 @@ def save_song(
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-            creds = flow.run_local_server(port=auth_port, bind_addr=bind_addr, open=False)
+            creds = flow.run_local_server(
+                port=auth_port, bind_addr=bind_addr, open=False
+            )
         # Save the credentials for the next run
         with open(token_path, "w") as token:
             token.write(creds.to_json())
