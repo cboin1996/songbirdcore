@@ -153,7 +153,10 @@ def run_download(url: str, file_path_no_format: str, file_format: str) -> str:
     }
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download(url)
+            error_code = ydl.download(url)
+        if error_code:
+            logger.error(f"received error code from yt-dlp --- could not perform download at url {url}.")
+            return None
         logger.info(f"Downloading successful. File stored locally: {local_file_path}")
         return local_file_path
     except Exception as e:
