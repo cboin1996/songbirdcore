@@ -6,7 +6,7 @@ jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
-
+    if: github.ref != 'refs/heads/gh-pages'  
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -18,7 +18,9 @@ jobs:
         python3 -m
         pip install
         build
-        --user - name: Build a binary wheel and a source tarball run: python3 -m build
+        --user 
+    - name: Build a binary wheel and a source tarball
+      run: python3 -m build
     - name: Store the distribution packages
       uses: actions/upload-artifact@v3
       with:
