@@ -18,7 +18,7 @@ def test_run_download(video_url: str, fmt: str, embed_thumbnail: bool):
         url=video_url,
         file_path_no_format=os.path.join(os.sep, "tmp", str(uuid.uuid4())),
         file_format=fmt,
-        embed_thumbnail=embed_thumbnail
+        embed_thumbnail=embed_thumbnail,
     )
     assert res is not None
 

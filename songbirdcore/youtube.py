@@ -125,7 +125,9 @@ def my_hook(d):
         success_downloading = False
 
 
-def run_download(url: str, file_path_no_format: str, file_format: str, embed_thumbnail: bool = False) -> Optional[str]:
+def run_download(
+    url: str, file_path_no_format: str, file_format: str, embed_thumbnail: bool = False
+) -> Optional[str]:
     """Run a download from youtube
 
     Args:
@@ -141,15 +143,12 @@ def run_download(url: str, file_path_no_format: str, file_format: str, embed_thu
         "format": "bestaudio/best",
         "cachedir": False,
         "postprocessors": [
-            {
-                "key": "FFmpegMetadata",
-                "add_metadata": True
-            },
+            {"key": "FFmpegMetadata", "add_metadata": True},
             {
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": file_format,
                 "preferredquality": "192",
-            }
+            },
         ],
         "nocheckcertificate": True,
         "logger": YtDlLogger(),
@@ -159,9 +158,11 @@ def run_download(url: str, file_path_no_format: str, file_format: str, embed_thu
     if embed_thumbnail:
         ydl_opts["writethumbnail"] = True
         ydl_opts["embedthumbnail"] = True
-        ydl_opts["postprocessors"].append({
-            "key": "EmbedThumbnail",
-        })
+        ydl_opts["postprocessors"].append(
+            {
+                "key": "EmbedThumbnail",
+            }
+        )
     try:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             error_code = ydl.download(url)
