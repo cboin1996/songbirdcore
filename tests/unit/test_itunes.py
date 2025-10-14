@@ -39,7 +39,10 @@ def query_api_album() -> (
         List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]: the list of song properties
     """
     album_results = itunes.query_api(
-        search_variable="dolly parton - jolene", limit=20, mode=modes.Modes.ALBUM, lookup=False
+        search_variable="dolly parton - jolene",
+        limit=20,
+        mode=modes.Modes.ALBUM,
+        lookup=False,
     )
     # select first result by default
     result = album_results[0]
