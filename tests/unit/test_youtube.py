@@ -4,6 +4,10 @@ import uuid
 import os
 
 
+@pytest.mark.skipif(
+    os.getenv("ENV", None) not in ["dev", "test"],
+    reason="Test should only be run locally, signified by ENV=dev|test",
+)
 @pytest.mark.parametrize(
     "video_url",
     [
