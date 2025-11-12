@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/common/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/gdrive/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/itunes/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/web/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/youtube/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/models/itunes_api/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+    <url>
+         <loc>https://cboin1996.github.io/songbirdcore/v0.1.6/songbirdcore/models/modes/</loc>
+         <lastmod>2025-11-12</lastmod>
+    </url>
+</urlset>
