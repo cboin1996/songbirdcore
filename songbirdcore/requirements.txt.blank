@@ -12,4 +12,4 @@ pydantic-settings
 requests-htmlc
 python-dotenv
 requests
-yt-dlp
+yt-dlp[default]

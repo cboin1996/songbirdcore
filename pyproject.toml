@@ -7,7 +7,7 @@ name = "songbirdcore"
 authors = [
     {name = "Christian Boin"},
 ]
-version = "0.1.5"
+version = "0.1.6"
 description = "core low level api for songbird"
 readme = "README.md"
 requires-python = ">=3.11"
