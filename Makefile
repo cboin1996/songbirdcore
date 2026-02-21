@@ -32,8 +32,6 @@ requirements: env
 ifeq ($(ENV), dev)
 	echo "install dev dependencies"
 	pip install -e .[dev]
-	pip uninstall requests-htmlc
-	pip install -e ../requests-html
 else
 	pip install -e .
 endif
@@ -41,7 +39,6 @@ endif
 
 .PHONY: update-requirements
 update-requirements: env
-	pip uninstall requests-htmlc
 	pip freeze --exclude-editable | xargs pip uninstall -y
 	rm $(APP_NAME)/$(REQUIREMENTS_FILE) || true
 	pip install -r $(APP_NAME)/requirements.txt.blank
