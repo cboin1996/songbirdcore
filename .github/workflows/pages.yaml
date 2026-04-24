@@ -13,14 +13,15 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v4
-      - name: Install markdownlint
+      - name: install requirements
         run: |
-          sudo apt-get update
-          sudo apt-get install -y nodejs npm
+          sudo apt update
+          sudo apt install nodejs npm
           sudo npm install -g markdownlint-cli
-      - name: Lint docs
+      - name: lint
         run: |
-          shopt -s globstar extglob
+          shopt -s globstar
+          shopt -s extglob
           make docs-lint
 
   test:
@@ -31,8 +32,10 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.13"
-      - run: uv sync --extra dev
-      - run: make docs-build
+      - name: install dependencies
+        run: make setup
+      - name: test the site builds
+        run: make docs-build
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,11 +45,17 @@ jobs:
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.13"
-      - run: uv sync --extra dev
-      - name: Get tag
+      - name: install dependencies
+        run: make setup
+      - name: get tag
         id: tag
-        run: echo "tag=$(echo $GITHUB_REF | sed 's/refs\/tags\///g')" >> $GITHUB_OUTPUT
-      - name: Deploy docs
+        run: |
+          ref="${GITHUB_REF}"
+          tag=$(echo $GITHUB_REF | sed 's/refs\/tags\///g')
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+      - name: deploy
+      # the below steps are referenced from
+      # https://github.com/jimporter/mike#deploying-via-ci
         run: |
           git fetch origin gh-pages --depth=1
           git config user.name github-actions

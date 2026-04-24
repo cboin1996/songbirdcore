@@ -1,4 +1,4 @@
-name: style
+name: Lint
 
 on:
   pull_request:
@@ -10,3 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: psf/black@stable
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - name: Install requirements
+        run: make setup
