@@ -38,17 +38,11 @@ def query_api_album() -> (
     Yields:
         List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]: the list of song properties
     """
-    album_results = itunes.query_api(
-        search_variable="dolly parton - jolene",
-        limit=20,
-        mode=modes.Modes.ALBUM,
-        lookup=False,
-    )
-    # select first result by default
-    result = album_results[0]
+    # Look up by stable collection ID to avoid non-deterministic text search results.
+    # collectionId 1062400323 = Dolly Parton "Jolene" (1974), artistName always "Dolly Parton"
     song_results = itunes.query_api(
-        search_variable=result.collectionId,
-        limit=result.trackCount,
+        search_variable=1062400323,
+        limit=11,
         mode=modes.Modes.SONG,
         lookup=True,
     )
