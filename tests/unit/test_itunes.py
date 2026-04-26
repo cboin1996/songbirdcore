@@ -114,3 +114,31 @@ def test_artwork_searcher(query_api):
     """test getting artwork url given song properties"""
     response = itunes.artwork_searcher(url=query_api[0].artworkUrl100)
     assert response.status_code == 200
+
+
+def test_mp3_tag_reader(create_test_folder, query_api):
+    """round-trip: tag an mp3 then read tags back"""
+    input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.mp3")
+    output_fpath = os.path.join(create_test_folder, "empty.mp3")
+    shutil.copy(input_fpath, output_fpath)
+    tags = query_api[0]
+    itunes.mp3ID3Tagger(mp3_path=output_fpath, song_tag_data=tags)
+    result = itunes.mp3_tag_reader(output_fpath)
+    assert result is not None
+    assert result.trackName == tags.trackName
+    assert result.artistName == tags.artistName
+    assert result.collectionName == tags.collectionName
+
+
+def test_m4a_tag_reader(create_test_folder, query_api):
+    """round-trip: tag an m4a then read tags back"""
+    input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.m4a")
+    output_fpath = os.path.join(create_test_folder, "empty.m4a")
+    shutil.copy(input_fpath, output_fpath)
+    tags = query_api[0]
+    itunes.m4a_tagger(file_path=output_fpath, song_tag_data=tags)
+    result = itunes.m4a_tag_reader(output_fpath)
+    assert result is not None
+    assert result.trackName == tags.trackName
+    assert result.artistName == tags.artistName
+    assert result.collectionName == tags.collectionName

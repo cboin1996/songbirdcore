@@ -181,6 +181,77 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         return False
 
 
+def mp3_tag_reader(mp3_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
+    """Read ID3 tags from an MP3 file and return as ItunesApiSongModel.
+
+    Args:
+        mp3_path (str): path to the mp3 file
+
+    Returns:
+        ItunesApiSongModel if tags could be read, None otherwise
+    """
+    try:
+        audiofile = eyed3.load(mp3_path)
+        if audiofile is None or audiofile.tag is None:
+            return None
+        tag = audiofile.tag
+        track_num, track_count = tag.track_num or (0, 0)
+        disc_num, disc_count = tag.disc_num or (1, 1)
+        return itunes_api.ItunesApiSongModel(
+            trackName=tag.title or "",
+            artistName=tag.artist or "",
+            collectionName=tag.album or "",
+            artworkUrl100="",
+            primaryGenreName=tag.genre.name if tag.genre else "",
+            trackNumber=track_num or 0,
+            trackCount=track_count or 0,
+            collectionArtistName=tag.album_artist or "",
+            discNumber=disc_num or 1,
+            discCount=disc_count or 1,
+            releaseDate=str(tag.recording_date) if tag.recording_date else "",
+        )
+    except Exception as e:
+        logger.exception(f"Error reading MP3 tags from {mp3_path}: {e}")
+        return None
+
+
+def m4a_tag_reader(m4a_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
+    """Read tags from an M4A file and return as ItunesApiSongModel.
+
+    Args:
+        m4a_path (str): path to the m4a file
+
+    Returns:
+        ItunesApiSongModel if tags could be read, None otherwise
+    """
+    try:
+        audiofile = MP4(m4a_path)
+        tags = audiofile.tags or {}
+
+        def _get(key: str, default: str = "") -> str:
+            val = tags.get(key)
+            return str(val[0]) if val else default
+
+        trkn = tags.get("trkn", [(0, 0)])[0]
+        disk = tags.get("disk", [(1, 1)])[0]
+        return itunes_api.ItunesApiSongModel(
+            trackName=_get("\xa9nam"),
+            artistName=_get("\xa9ART"),
+            collectionName=_get("\xa9alb"),
+            artworkUrl100="",
+            primaryGenreName=_get("\xa9gen"),
+            trackNumber=trkn[0] if trkn else 0,
+            trackCount=trkn[1] if trkn else 0,
+            collectionArtistName=_get("aART"),
+            discNumber=disk[0] if disk else 1,
+            discCount=disk[1] if disk else 1,
+            releaseDate=_get("\xa9day"),
+        )
+    except Exception as e:
+        logger.exception(f"Error reading M4A tags from {m4a_path}: {e}")
+        return None
+
+
 def query_api(
     search_variable: str, limit: int, mode: modes.Modes, lookup: bool = False
 ) -> List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]:
