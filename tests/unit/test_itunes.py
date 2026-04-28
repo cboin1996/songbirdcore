@@ -123,11 +123,11 @@ def test_mp3_tag_reader(create_test_folder, query_api):
     shutil.copy(input_fpath, output_fpath)
     tags = query_api[0]
     itunes.mp3ID3Tagger(mp3_path=output_fpath, song_tag_data=tags)
-    result = itunes.mp3_tag_reader(output_fpath)
-    assert result is not None
-    assert result.trackName == tags.trackName
-    assert result.artistName == tags.artistName
-    assert result.collectionName == tags.collectionName
+    model, artwork_bytes = itunes.mp3_tag_reader(output_fpath)
+    assert model is not None
+    assert model.trackName == tags.trackName
+    assert model.artistName == tags.artistName
+    assert model.collectionName == tags.collectionName
 
 
 def test_m4a_tag_reader(create_test_folder, query_api):
@@ -137,8 +137,8 @@ def test_m4a_tag_reader(create_test_folder, query_api):
     shutil.copy(input_fpath, output_fpath)
     tags = query_api[0]
     itunes.m4a_tagger(file_path=output_fpath, song_tag_data=tags)
-    result = itunes.m4a_tag_reader(output_fpath)
-    assert result is not None
-    assert result.trackName == tags.trackName
-    assert result.artistName == tags.artistName
-    assert result.collectionName == tags.collectionName
+    model, artwork_bytes = itunes.m4a_tag_reader(output_fpath)
+    assert model is not None
+    assert model.trackName == tags.trackName
+    assert model.artistName == tags.artistName
+    assert model.collectionName == tags.collectionName

@@ -181,23 +181,20 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         return False
 
 
-def mp3_tag_reader(mp3_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
-    """Read ID3 tags from an MP3 file and return as ItunesApiSongModel.
-
-    Args:
-        mp3_path (str): path to the mp3 file
+def mp3_tag_reader(mp3_path: str) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+    """Read ID3 tags and embedded artwork from an MP3 file.
 
     Returns:
-        ItunesApiSongModel if tags could be read, None otherwise
+        (ItunesApiSongModel or None, artwork bytes or None)
     """
     try:
         audiofile = eyed3.load(mp3_path)
         if audiofile is None or audiofile.tag is None:
-            return None
+            return None, None
         tag = audiofile.tag
         track_num, track_count = tag.track_num or (0, 0)
         disc_num, disc_count = tag.disc_num or (1, 1)
-        return itunes_api.ItunesApiSongModel(
+        model = itunes_api.ItunesApiSongModel(
             trackName=tag.title or "",
             artistName=tag.artist or "",
             collectionName=tag.album or "",
@@ -210,19 +207,18 @@ def mp3_tag_reader(mp3_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
             discCount=disc_count or 1,
             releaseDate=str(tag.recording_date) if tag.recording_date else "",
         )
+        artwork_bytes = next((img.image_data for img in tag.images if img.image_data), None)
+        return model, artwork_bytes
     except Exception as e:
         logger.exception(f"Error reading MP3 tags from {mp3_path}: {e}")
-        return None
+        return None, None
 
 
-def m4a_tag_reader(m4a_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
-    """Read tags from an M4A file and return as ItunesApiSongModel.
-
-    Args:
-        m4a_path (str): path to the m4a file
+def m4a_tag_reader(m4a_path: str) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+    """Read tags and embedded artwork from an M4A file.
 
     Returns:
-        ItunesApiSongModel if tags could be read, None otherwise
+        (ItunesApiSongModel or None, artwork bytes or None)
     """
     try:
         audiofile = MP4(m4a_path)
@@ -234,7 +230,7 @@ def m4a_tag_reader(m4a_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
 
         trkn = tags.get("trkn", [(0, 0)])[0]
         disk = tags.get("disk", [(1, 1)])[0]
-        return itunes_api.ItunesApiSongModel(
+        model = itunes_api.ItunesApiSongModel(
             trackName=_get("\xa9nam"),
             artistName=_get("\xa9ART"),
             collectionName=_get("\xa9alb"),
@@ -247,9 +243,12 @@ def m4a_tag_reader(m4a_path: str) -> Optional[itunes_api.ItunesApiSongModel]:
             discCount=disk[1] if disk else 1,
             releaseDate=_get("\xa9day"),
         )
+        covers = tags.get("covr", [])
+        artwork_bytes = bytes(covers[0]) if covers else None
+        return model, artwork_bytes
     except Exception as e:
         logger.exception(f"Error reading M4A tags from {m4a_path}: {e}")
-        return None
+        return None, None
 
 
 def query_api(
