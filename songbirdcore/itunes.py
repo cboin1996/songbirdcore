@@ -181,6 +181,134 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         return False
 
 
+def m4aID3TaggerNoArtwork(
+    file_path: str, song_tag_data: itunes_api.ItunesApiSongModel
+) -> bool:
+    """Tag an m4a file with metadata only — no artwork fetch."""
+    try:
+        logger.info(f"Adding tags (no artwork) to m4a file: {file_path}")
+        audiofile = MP4(file_path)
+        audiofile["\xa9ART"] = song_tag_data.artistName
+        audiofile["\xa9alb"] = song_tag_data.collectionName
+        audiofile["\xa9nam"] = song_tag_data.trackName
+        audiofile["\xa9gen"] = song_tag_data.primaryGenreName
+        audiofile["trkn"] = [(song_tag_data.trackNumber, song_tag_data.trackCount)]
+        audiofile["disk"] = [(song_tag_data.discNumber, song_tag_data.discCount)]
+        audiofile["\xa9day"] = song_tag_data.releaseDate
+        if song_tag_data.collectionArtistName is not None:
+            audiofile["aART"] = song_tag_data.collectionArtistName
+        audiofile.save()
+        logger.info("Your tags have been set.")
+        return True
+    except Exception as e:
+        logger.exception(
+            f"Unexpected error occured while trying to tag your m4a file: {e}"
+        )
+        return False
+
+
+def mp3ID3TaggerNoArtwork(
+    mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel
+) -> bool:
+    """Tag an mp3 file with metadata only — no artwork fetch."""
+    try:
+        logger.info(f"Adding tags (no artwork) to mp3 file: {mp3_path}")
+        audiofile = eyed3.load(mp3_path)
+        audiofile.tag.artist = song_tag_data.artistName
+        audiofile.tag.album = song_tag_data.collectionName
+        audiofile.tag.title = song_tag_data.trackName
+        audiofile.tag.genre = song_tag_data.primaryGenreName
+        audiofile.tag.track_num = (song_tag_data.trackNumber, song_tag_data.trackCount)
+        audiofile.tag.disc_num = (song_tag_data.discNumber, song_tag_data.discCount)
+        audiofile.tag.recording_date = song_tag_data.releaseDate
+        if song_tag_data.collectionArtistName is not None:
+            audiofile.tag.album_artist = song_tag_data.collectionArtistName
+        audiofile.tag.save()
+        logger.info("Your tags have been set.")
+        return True
+    except Exception as e:
+        logger.exception(
+            f"Unexpected error occured while trying to tag your mp3 file: {e}"
+        )
+        return False
+
+
+def mp3_tag_reader(
+    mp3_path: str,
+) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+    """Read ID3 tags and embedded artwork from an MP3 file.
+
+    Returns:
+        (ItunesApiSongModel or None, artwork bytes or None)
+    """
+    try:
+        audiofile = eyed3.load(mp3_path)
+        if audiofile is None or audiofile.tag is None:
+            return None, None
+        tag = audiofile.tag
+        track_num, track_count = tag.track_num or (0, 0)
+        disc_num, disc_count = tag.disc_num or (1, 1)
+        model = itunes_api.ItunesApiSongModel(
+            trackName=tag.title or "",
+            artistName=tag.artist or "",
+            collectionName=tag.album or "",
+            artworkUrl100="",
+            primaryGenreName=tag.genre.name if tag.genre else "",
+            trackNumber=track_num or 0,
+            trackCount=track_count or 0,
+            collectionArtistName=tag.album_artist or "",
+            discNumber=disc_num or 1,
+            discCount=disc_count or 1,
+            releaseDate=str(tag.recording_date) if tag.recording_date else "",
+        )
+        artwork_bytes = next(
+            (img.image_data for img in tag.images if img.image_data), None
+        )
+        return model, artwork_bytes
+    except Exception as e:
+        logger.exception(f"Error reading MP3 tags from {mp3_path}: {e}")
+        return None, None
+
+
+def m4a_tag_reader(
+    m4a_path: str,
+) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+    """Read tags and embedded artwork from an M4A file.
+
+    Returns:
+        (ItunesApiSongModel or None, artwork bytes or None)
+    """
+    try:
+        audiofile = MP4(m4a_path)
+        tags = audiofile.tags or {}
+
+        def _get(key: str, default: str = "") -> str:
+            val = tags.get(key)
+            return str(val[0]) if val else default
+
+        trkn = tags.get("trkn", [(0, 0)])[0]
+        disk = tags.get("disk", [(1, 1)])[0]
+        model = itunes_api.ItunesApiSongModel(
+            trackName=_get("\xa9nam"),
+            artistName=_get("\xa9ART"),
+            collectionName=_get("\xa9alb"),
+            artworkUrl100="",
+            primaryGenreName=_get("\xa9gen"),
+            trackNumber=trkn[0] if trkn else 0,
+            trackCount=trkn[1] if trkn else 0,
+            collectionArtistName=_get("aART"),
+            discNumber=disk[0] if disk else 1,
+            discCount=disk[1] if disk else 1,
+            releaseDate=_get("\xa9day"),
+        )
+        covers = tags.get("covr", [])
+        artwork_bytes = bytes(covers[0]) if covers else None
+        return model, artwork_bytes
+    except Exception as e:
+        logger.exception(f"Error reading M4A tags from {m4a_path}: {e}")
+        return None, None
+
+
 def query_api(
     search_variable: str, limit: int, mode: modes.Modes, lookup: bool = False
 ) -> List[Union[itunes_api.ItunesApiSongModel, itunes_api.ItunesApiAlbumKeys]]:
