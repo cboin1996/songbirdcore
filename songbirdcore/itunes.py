@@ -181,6 +181,50 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         return False
 
 
+def m4aID3TaggerNoArtwork(file_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
+    """Tag an m4a file with metadata only — no artwork fetch."""
+    try:
+        logger.info(f"Adding tags (no artwork) to m4a file: {file_path}")
+        audiofile = MP4(file_path)
+        audiofile["\xa9ART"] = song_tag_data.artistName
+        audiofile["\xa9alb"] = song_tag_data.collectionName
+        audiofile["\xa9nam"] = song_tag_data.trackName
+        audiofile["\xa9gen"] = song_tag_data.primaryGenreName
+        audiofile["trkn"] = [(song_tag_data.trackNumber, song_tag_data.trackCount)]
+        audiofile["disk"] = [(song_tag_data.discNumber, song_tag_data.discCount)]
+        audiofile["\xa9day"] = song_tag_data.releaseDate
+        if song_tag_data.collectionArtistName is not None:
+            audiofile["aART"] = song_tag_data.collectionArtistName
+        audiofile.save()
+        logger.info("Your tags have been set.")
+        return True
+    except Exception as e:
+        logger.exception(f"Unexpected error occured while trying to tag your m4a file: {e}")
+        return False
+
+
+def mp3ID3TaggerNoArtwork(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
+    """Tag an mp3 file with metadata only — no artwork fetch."""
+    try:
+        logger.info(f"Adding tags (no artwork) to mp3 file: {mp3_path}")
+        audiofile = eyed3.load(mp3_path)
+        audiofile.tag.artist = song_tag_data.artistName
+        audiofile.tag.album = song_tag_data.collectionName
+        audiofile.tag.title = song_tag_data.trackName
+        audiofile.tag.genre = song_tag_data.primaryGenreName
+        audiofile.tag.track_num = (song_tag_data.trackNumber, song_tag_data.trackCount)
+        audiofile.tag.disc_num = (song_tag_data.discNumber, song_tag_data.discCount)
+        audiofile.tag.recording_date = song_tag_data.releaseDate
+        if song_tag_data.collectionArtistName is not None:
+            audiofile.tag.album_artist = song_tag_data.collectionArtistName
+        audiofile.tag.save()
+        logger.info("Your tags have been set.")
+        return True
+    except Exception as e:
+        logger.exception(f"Unexpected error occured while trying to tag your mp3 file: {e}")
+        return False
+
+
 def mp3_tag_reader(mp3_path: str) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
     """Read ID3 tags and embedded artwork from an MP3 file.
 
