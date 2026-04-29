@@ -116,29 +116,62 @@ def test_artwork_searcher(query_api):
     assert response.status_code == 200
 
 
+def _assert_round_trip(model, tags):
+    assert model is not None
+    assert model.trackName == tags.trackName
+    assert model.artistName == tags.artistName
+    assert model.collectionName == tags.collectionName
+    assert model.primaryGenreName == tags.primaryGenreName
+    assert model.trackNumber == tags.trackNumber
+    assert model.trackCount == tags.trackCount
+    assert model.discNumber == tags.discNumber
+    assert model.discCount == tags.discCount
+    assert model.collectionArtistName == tags.collectionArtistName
+
+
 def test_mp3_tag_reader(create_test_folder, query_api):
-    """round-trip: tag an mp3 then read tags back"""
+    """round-trip: tag an mp3 (with artwork) then read tags back"""
     input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.mp3")
     output_fpath = os.path.join(create_test_folder, "empty.mp3")
     shutil.copy(input_fpath, output_fpath)
     tags = query_api[0]
     itunes.mp3ID3Tagger(mp3_path=output_fpath, song_tag_data=tags)
     model, artwork_bytes = itunes.mp3_tag_reader(output_fpath)
-    assert model is not None
-    assert model.trackName == tags.trackName
-    assert model.artistName == tags.artistName
-    assert model.collectionName == tags.collectionName
+    _assert_round_trip(model, tags)
+    assert artwork_bytes is not None and len(artwork_bytes) > 0
 
 
 def test_m4a_tag_reader(create_test_folder, query_api):
-    """round-trip: tag an m4a then read tags back"""
+    """round-trip: tag an m4a (with artwork) then read tags back"""
     input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.m4a")
     output_fpath = os.path.join(create_test_folder, "empty.m4a")
     shutil.copy(input_fpath, output_fpath)
     tags = query_api[0]
     itunes.m4a_tagger(file_path=output_fpath, song_tag_data=tags)
     model, artwork_bytes = itunes.m4a_tag_reader(output_fpath)
-    assert model is not None
-    assert model.trackName == tags.trackName
-    assert model.artistName == tags.artistName
-    assert model.collectionName == tags.collectionName
+    _assert_round_trip(model, tags)
+    assert artwork_bytes is not None and len(artwork_bytes) > 0
+
+
+def test_mp3_no_artwork_tagger_round_trip(create_test_folder, query_api):
+    """mp3ID3TaggerNoArtwork: tag without artwork, reader returns no artwork"""
+    input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.mp3")
+    output_fpath = os.path.join(create_test_folder, "empty.mp3")
+    shutil.copy(input_fpath, output_fpath)
+    tags = query_api[0]
+    assert itunes.mp3ID3TaggerNoArtwork(mp3_path=output_fpath, song_tag_data=tags)
+    model, artwork_bytes = itunes.mp3_tag_reader(output_fpath)
+    _assert_round_trip(model, tags)
+    assert artwork_bytes is None
+
+
+def test_m4a_no_artwork_tagger_round_trip(create_test_folder, query_api):
+    """m4aID3TaggerNoArtwork: tag without artwork, reader returns no artwork"""
+    input_fpath = os.path.join(sys.path[0], RESOURCES_FOLDER, "empty.m4a")
+    output_fpath = os.path.join(create_test_folder, "empty.m4a")
+    shutil.copy(input_fpath, output_fpath)
+    tags = query_api[0]
+    assert itunes.m4aID3TaggerNoArtwork(file_path=output_fpath, song_tag_data=tags)
+    model, artwork_bytes = itunes.m4a_tag_reader(output_fpath)
+    _assert_round_trip(model, tags)
+    assert artwork_bytes is None

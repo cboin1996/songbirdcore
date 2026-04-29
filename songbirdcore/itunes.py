@@ -181,7 +181,9 @@ def mp3ID3Tagger(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) ->
         return False
 
 
-def m4aID3TaggerNoArtwork(file_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
+def m4aID3TaggerNoArtwork(
+    file_path: str, song_tag_data: itunes_api.ItunesApiSongModel
+) -> bool:
     """Tag an m4a file with metadata only — no artwork fetch."""
     try:
         logger.info(f"Adding tags (no artwork) to m4a file: {file_path}")
@@ -199,11 +201,15 @@ def m4aID3TaggerNoArtwork(file_path: str, song_tag_data: itunes_api.ItunesApiSon
         logger.info("Your tags have been set.")
         return True
     except Exception as e:
-        logger.exception(f"Unexpected error occured while trying to tag your m4a file: {e}")
+        logger.exception(
+            f"Unexpected error occured while trying to tag your m4a file: {e}"
+        )
         return False
 
 
-def mp3ID3TaggerNoArtwork(mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel) -> bool:
+def mp3ID3TaggerNoArtwork(
+    mp3_path: str, song_tag_data: itunes_api.ItunesApiSongModel
+) -> bool:
     """Tag an mp3 file with metadata only — no artwork fetch."""
     try:
         logger.info(f"Adding tags (no artwork) to mp3 file: {mp3_path}")
@@ -221,11 +227,15 @@ def mp3ID3TaggerNoArtwork(mp3_path: str, song_tag_data: itunes_api.ItunesApiSong
         logger.info("Your tags have been set.")
         return True
     except Exception as e:
-        logger.exception(f"Unexpected error occured while trying to tag your mp3 file: {e}")
+        logger.exception(
+            f"Unexpected error occured while trying to tag your mp3 file: {e}"
+        )
         return False
 
 
-def mp3_tag_reader(mp3_path: str) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+def mp3_tag_reader(
+    mp3_path: str,
+) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
     """Read ID3 tags and embedded artwork from an MP3 file.
 
     Returns:
@@ -251,14 +261,18 @@ def mp3_tag_reader(mp3_path: str) -> tuple[Optional[itunes_api.ItunesApiSongMode
             discCount=disc_count or 1,
             releaseDate=str(tag.recording_date) if tag.recording_date else "",
         )
-        artwork_bytes = next((img.image_data for img in tag.images if img.image_data), None)
+        artwork_bytes = next(
+            (img.image_data for img in tag.images if img.image_data), None
+        )
         return model, artwork_bytes
     except Exception as e:
         logger.exception(f"Error reading MP3 tags from {mp3_path}: {e}")
         return None, None
 
 
-def m4a_tag_reader(m4a_path: str) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
+def m4a_tag_reader(
+    m4a_path: str,
+) -> tuple[Optional[itunes_api.ItunesApiSongModel], Optional[bytes]]:
     """Read tags and embedded artwork from an M4A file.
 
     Returns:
