@@ -1,0 +1,39 @@
+name: version-check
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version bumped
+        run: |
+          git fetch origin main
+
+          MAIN_VERSION=$(git show origin/main:songbirdcore/version.py | grep '^version' | cut -d'"' -f2)
+          PR_VERSION=$(grep '^version' songbirdcore/version.py | cut -d'"' -f2)
+
+          MAIN_PYPROJECT=$(git show origin/main:pyproject.toml | grep '^version' | head -1 | cut -d'"' -f2)
+          PR_PYPROJECT=$(grep '^version' pyproject.toml | head -1 | cut -d'"' -f2)
+
+          echo "main: version.py=$MAIN_VERSION pyproject.toml=$MAIN_PYPROJECT"
+          echo "pr:   version.py=$PR_VERSION pyproject.toml=$PR_PYPROJECT"
+
+          if [ "$MAIN_VERSION" = "$PR_VERSION" ]; then
+            echo "::error::version.py not bumped (still $PR_VERSION)"
+            exit 1
+          fi
+          if [ "$MAIN_PYPROJECT" = "$PR_PYPROJECT" ]; then
+            echo "::error::pyproject.toml not bumped (still $PR_PYPROJECT)"
+            exit 1
+          fi
+          echo "OK: $MAIN_VERSION -> $PR_PYPROJECT"
