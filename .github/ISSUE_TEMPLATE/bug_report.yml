@@ -1,0 +1,77 @@
+name: Bug report
+description: Something is broken in the songbirdcore library
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please include enough info to reproduce locally.
+
+  - type: input
+    id: songbirdcore-version
+    attributes:
+      label: songbirdcore version
+      description: Output of `pip show songbirdcore` or `uv pip show songbirdcore`
+      placeholder: "0.1.9"
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      placeholder: "3.13.1"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "macOS 14.4 / Ubuntu 24.04 / Windows 11"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: which-module
+    attributes:
+      label: Which module/feature?
+      options:
+        - "itunes (search / tagging)"
+        - "youtube (download)"
+        - "mp3_tag_reader / m4a_tag_reader"
+        - "models / Pydantic"
+        - "Other / not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Minimal code to reproduce
+      description: Smallest snippet that triggers the bug. Redact any secrets/tokens.
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full traceback
+      description: If the bug raises an exception, paste the entire traceback
+      render: shell
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true

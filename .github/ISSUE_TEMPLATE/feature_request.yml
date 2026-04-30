@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest a new module, function, or capability
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      placeholder: "I need to do X but the library doesn't expose Y..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: Function signature or usage example if you have a concrete idea
+      render: python
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds with the existing API or other libraries?
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Affected module
+      options:
+        - "itunes"
+        - "youtube"
+        - "tag readers"
+        - "models"
+        - "new module"
+        - "build / packaging"
